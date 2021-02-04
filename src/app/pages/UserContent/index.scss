@@ -1,0 +1,11 @@
+@import 'src/variables.scss';
+
+.user-content {
+  background-color: $color-black;
+  padding-bottom: 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
+}

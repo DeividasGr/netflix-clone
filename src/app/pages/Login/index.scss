@@ -1,0 +1,54 @@
+@import 'src/variables';
+
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $color-grey;
+  height: 90vh;
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50rem;
+    height: 25rem;
+    background-color: $color-light-grey;
+    border-radius: 0.8rem;
+    padding: 1rem 3rem;
+  }
+
+  &__label {
+    display: flex;
+    flex-direction: column;
+    margin: 0.5rem 0;
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+
+  &__input {
+    padding: 1rem;
+    width: 100%;
+    outline: none;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.5rem;
+
+    &__container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      border: 1px solid $color-white;
+      background-color: $color-white;
+      border-radius: 0.5rem;
+    }
+  }
+  &__logo {
+    margin: 0 1rem;
+    cursor: pointer;
+    font-size: 1.7rem;
+    color: $color-light-grey;
+  }
+}

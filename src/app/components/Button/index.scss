@@ -1,0 +1,44 @@
+@import 'src/variables';
+
+.btn {
+  margin-right: 2rem;
+  background-color: $color-red;
+  border: 1px solid $color-grey;
+  outline: none;
+  color: $color-white;
+  padding: 0.8rem 2.4rem;
+  font-weight: bold;
+  border-radius: 0.5rem;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: background-color 0.4s;
+  &--dark {
+    background-color: $color-grey;
+    border: 1px solid $color-red;
+    margin-right: 2rem;
+    outline: none;
+    color: $color-white;
+    padding: 0.8rem 2.4rem;
+    font-weight: bold;
+    border-radius: 0.5rem;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: background-color 0.4s;
+  }
+  &:hover {
+    background-color: $color-hover;
+    transition: background-color 0.4s;
+  }
+}
+
+.mb-sm {
+  margin-bottom: 1.5rem;
+}
+
+.mt-sm {
+  margin-top: 1.5rem;
+}
+
+a:hover {
+  color: $color-white;
+}
