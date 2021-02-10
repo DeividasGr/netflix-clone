@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Button from '../../components/Button';
 import { FaEye } from 'react-icons/fa';
+import { connect } from 'react-redux';
 import './index.scss';
 
-function Login() {
+function Login({ onLogin }) {
   const history = useHistory();
   const [field, setField] = useState(false);
   const [password, setPassword] = useState('');
@@ -35,8 +36,8 @@ function Login() {
         config
       );
       const data = await response.json();
-      localStorage.setItem('token', data.token);
       if (response.ok) {
+        onLogin(data.token);
         history.replace('/usercontent');
       } else {
         const error = 'Failure: please check the login details';
@@ -85,4 +86,12 @@ function Login() {
   );
 }
 
-export default Login;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onLogin: (token) => {
+      dispatch({ type: 'LOGIN_SUCCESS', payload: token });
+    },
+  };
+};
+
+export default connect(null, mapDispatchToProps)(Login);

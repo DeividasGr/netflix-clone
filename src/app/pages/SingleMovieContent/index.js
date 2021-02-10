@@ -4,17 +4,34 @@ import useFetch from '../../hooks/useFetch';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
 import Loader from '../../components/Loader';
+import { connect } from 'react-redux';
 import './index.scss';
 
-function SingleMovieContent({ favorites, toggleFavorites }) {
+function SingleMovieContent({
+  isLoading,
+  error,
+  movie,
+  token,
+  onSuccess,
+  onFailure,
+  onStart,
+  favorites,
+  toggleFavorites,
+}) {
   const { movieId } = useParams();
+  const url = `https://academy-video-api.herokuapp.com/content/items/${movieId}`;
   const fetchOptions = useRef({
-    headers: { authorization: localStorage.getItem('token') },
+    headers: { authorization: token },
   });
-  const { isLoading, error, payload: movie = [] } = useFetch(
-    `https://academy-video-api.herokuapp.com/content/items/${movieId}`,
-    fetchOptions.current
-  );
+
+  useFetch({
+    url: url,
+    fetchOptions: fetchOptions.current,
+    onSuccess,
+    onFailure,
+    onStart,
+  });
+
   const [show, setShow] = useState(false);
 
   const showModal = () => {
@@ -60,4 +77,31 @@ function SingleMovieContent({ favorites, toggleFavorites }) {
   );
 }
 
-export default SingleMovieContent;
+const mapStateToProps = ({ content, auth }) => {
+  return {
+    movie: content.movies.data,
+    isLoading: content.movies.isLoading,
+    error: content.movies.error,
+    favorites: content.favorites,
+    token: auth.token,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onStart: () => {
+      dispatch({ type: 'GET_MOVIES' });
+    },
+    onSuccess: (json) => {
+      dispatch({ type: 'GET_MOVIES_SUCCESS', payload: json });
+    },
+    onFailure: (error) => {
+      dispatch({ type: 'GET_MOVIES_FAIL', payload: error });
+    },
+    toggleFavorites: (id) => {
+      dispatch({ type: 'TOGGLE_FAVORITE', payload: id });
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SingleMovieContent);
