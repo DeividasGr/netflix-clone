@@ -10,7 +10,7 @@ import './index.scss';
 function SingleMovieContent({
   isLoading,
   error,
-  movie,
+  movies,
   token,
   onSuccess,
   onFailure,
@@ -23,11 +23,14 @@ function SingleMovieContent({
   const fetchOptions = useRef({
     headers: { authorization: token },
   });
+  const movie = movies.filter(({ id }) => movieId === id)[0];
+  console.log(movie, movies);
 
   useFetch({
     url: url,
     fetchOptions: fetchOptions.current,
     onSuccess,
+    condition: !movie,
     onFailure,
     onStart,
   });
@@ -38,48 +41,51 @@ function SingleMovieContent({
     setShow(true);
   };
 
-  return isLoading ? (
-    <Loader />
-  ) : (
-    <section className="movies">
-      <Modal
-        movie={movie}
-        show={show}
-        close={() => {
-          setShow(false);
-        }}
-      />
-      <div className="single-movie__container">
-        <div className="single-movie__img-container">
-          <img
-            className="single-movie__img"
-            src={movie.image}
-            alt={movie.title}
+  return (
+    <>
+      {isLoading && <Loader />}
+      {movie && (
+        <section className="movies">
+          <Modal
+            movie={movie}
+            show={show}
+            close={() => {
+              setShow(false);
+            }}
           />
-        </div>
-        <div className="single-movie__content-container">
-          <h3 className="single-movie__title">{movie.title}</h3>
-          <p className="single-movie__content">{movie.description}</p>
-          <div>
-            <Button onClick={() => showModal()}>Watch</Button>
-            <Button
-              onClick={() => toggleFavorites(movie.id)}
-              isFavorite={favorites.includes(movie.id) ? true : false}
-              marginBottom
-            >
-              {favorites.includes(movie.id) ? 'Remove' : 'Favorite'}
-            </Button>
+          <div className="single-movie__container">
+            <div className="single-movie__img-container">
+              <img
+                className="single-movie__img"
+                src={movie.image}
+                alt={movie.title}
+              />
+            </div>
+            <div className="single-movie__content-container">
+              <h3 className="single-movie__title">{movie.title}</h3>
+              <p className="single-movie__content">{movie.description}</p>
+              <div>
+                <Button onClick={() => showModal()}>Watch</Button>
+                <Button
+                  onClick={() => toggleFavorites(movie.id)}
+                  isFavorite={favorites.includes(movie.id) ? true : false}
+                  marginBottom
+                >
+                  {favorites.includes(movie.id) ? 'Remove' : 'Favorite'}
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      {error && <p>{error}</p>}
-    </section>
+          {error && <p>{error}</p>}
+        </section>
+      )}
+    </>
   );
 }
 
 const mapStateToProps = ({ content, auth }) => {
   return {
-    movie: content.movies.data,
+    movies: content.movies.data,
     isLoading: content.movies.isLoading,
     error: content.movies.error,
     favorites: content.favorites,
@@ -90,13 +96,13 @@ const mapStateToProps = ({ content, auth }) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onStart: () => {
-      dispatch({ type: 'GET_MOVIES' });
+      dispatch({ type: 'GET_SINGLE_MOVIE' });
     },
     onSuccess: (json) => {
-      dispatch({ type: 'GET_MOVIES_SUCCESS', payload: json });
+      dispatch({ type: 'GET_SINGLE_MOVIE_SUCCESS', payload: json });
     },
     onFailure: (error) => {
-      dispatch({ type: 'GET_MOVIES_FAIL', payload: error });
+      dispatch({ type: 'GET_SINGLE_MOVIE_FAIL', payload: error });
     },
     toggleFavorites: (id) => {
       dispatch({ type: 'TOGGLE_FAVORITE', payload: id });

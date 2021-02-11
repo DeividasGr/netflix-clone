@@ -21,6 +21,31 @@ function reducer(state = INITIAL_STATE, action) {
         ...state,
         movies: { ...INITIAL_STATE.movies, error: action.payload },
       };
+    case 'GET_SINGLE_MOVIE':
+      return {
+        ...state,
+        movies: { ...state.movies, isLoading: true, error: null },
+      };
+    case 'GET_SINGLE_MOVIE_SUCCESS':
+      console.log('single movie success ', action);
+      return {
+        ...state,
+        movies: {
+          ...state.movies,
+          isLoading: false,
+          //state.movies.data check for movie id
+          data: state.movies.data.concat(action.payload),
+        },
+      };
+    case 'GET_SINGLE_MOVIE_FAIL':
+      return {
+        ...state,
+        movies: {
+          ...INITIAL_STATE.movies,
+          isLoading: false,
+          error: action.payload,
+        },
+      };
     case 'TOGGLE_FAVORITE':
       const toggleFavorites = (id) => {
         if (state.favorites.includes(id)) {
