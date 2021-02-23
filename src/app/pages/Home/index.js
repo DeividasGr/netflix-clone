@@ -1,10 +1,11 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import useFetch from '../../hooks/useFetch';
 import Movie from '../../components/Movie';
 import Button from '../../components/Button';
 import Hero from '../../components/Hero';
 import Loader from '../../components/Loader';
-import { connect } from 'react-redux';
+import content from '../../../content';
 import './index.scss';
 
 function Home({
@@ -17,6 +18,8 @@ function Home({
   favorites,
   toggleFavorites,
 }) {
+  const dispatch = useDispatch();
+
   useFetch({
     url: 'https://academy-video-api.herokuapp.com/content/free-items',
     onSuccess,
@@ -40,8 +43,10 @@ function Home({
                   image={image}
                   title={title}
                   desc={description}
-                  toggleFavorites={toggleFavorites}
-                  favorites={favorites}
+                  toggleFavorites={() =>
+                    dispatch(content.actions.toggleFavorites(id))
+                  }
+                  isFavorite={favorites.includes(id)}
                 />
               </div>
             );
@@ -56,30 +61,23 @@ function Home({
   );
 }
 
-const mapStateToProps = ({ content }) => {
-  return {
-    favorites: content.favorites,
-    movies: content.movies.data,
-    isLoading: content.movies.isLoading,
-    error: content.movies.error,
-  };
-};
+// const enhance = connect(
+//   (state) => ({
+//     movies: content.selectors.getMovies(state),
+//     favorites: content.selectors.getFavorites(state),
+//     loading: content.selectors.isLoading(state),
+//     token: state.auth.token,
+//   }),
+//   (dispatch) =>
+//     bindActionCreators(
+//       {
+//         onStart: content.actions.getMovies,
+//         onSuccess: content.actions.getMoviesSuccess,
+//         onFailure: content.actions.getMoviesFailure,
+//         toggleFavorites: content.actions.toggleFavorites,
+//       },
+//       dispatch
+//     )
+// );
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onStart: () => {
-      dispatch({ type: 'GET_MOVIES' });
-    },
-    onSuccess: (json) => {
-      dispatch({ type: 'GET_MOVIES_SUCCESS', payload: json });
-    },
-    onFailure: (error) => {
-      dispatch({ type: 'GET_MOVIES_FAIL', payload: error });
-    },
-    toggleFavorites: (id) => {
-      dispatch({ type: 'TOGGLE_FAVORITE', payload: id });
-    },
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default Home;

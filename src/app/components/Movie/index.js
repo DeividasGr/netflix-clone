@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Button from '../Button';
 import './index.scss';
 
-function Movie({ image, title, desc, favorites, toggleFavorites, id }) {
+function Movie({ image, title, desc, isFavorite, toggleFavorites, id }) {
   const [showMore, setShowMore] = useState(false);
 
   return (
@@ -25,10 +25,10 @@ function Movie({ image, title, desc, favorites, toggleFavorites, id }) {
         </p>
         <Button
           onClick={() => toggleFavorites(id)}
-          isFavorite={favorites.includes(id) ? true : false}
+          isFavorite={isFavorite}
           marginBottom
         >
-          {favorites.includes(id) ? 'Remove' : 'Favorite'}
+          {isFavorite ? 'Remove' : 'Favorite'}
         </Button>
       </div>
     </>
