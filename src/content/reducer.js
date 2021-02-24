@@ -29,7 +29,6 @@ function reducer(state = INITIAL_STATE, action) {
         movies: { ...state.movies, isLoading: true, error: null },
       };
     case types.GET_SINGLE_MOVIE_SUCCESS:
-      console.log('single movie success ', action);
       return {
         ...state,
         movies: {

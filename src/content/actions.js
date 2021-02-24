@@ -3,22 +3,38 @@ import * as types from './actionTypes';
 export const getMovies = () => async (dispatch, getState) => {
   dispatch({ type: types.GET_MOVIES });
   try {
-    const response = await fetch(
-      'https://academy-video-api.herokuapp.com/content/items',
-      {
-        headers: { authorization: getState().auth.token },
-      }
-    );
-    const data = await response.json();
-
-    if (!response.ok) {
-      const error = 'Something went wrong!';
-      throw new Error(
-        JSON.stringify({ message: error, status: response.status })
+    if (getState().auth.token) {
+      const response = await fetch(
+        'https://academy-video-api.herokuapp.com/content/items',
+        {
+          headers: { authorization: getState().auth.token },
+        }
       );
-    }
+      const data = await response.json();
 
-    dispatch({ type: types.GET_MOVIES_SUCCESS, payload: data });
+      if (!response.ok) {
+        const error = 'Something went wrong!';
+        throw new Error(
+          JSON.stringify({ message: error, status: response.status })
+        );
+      }
+
+      dispatch({ type: types.GET_MOVIES_SUCCESS, payload: data });
+    } else {
+      const response = await fetch(
+        'https://academy-video-api.herokuapp.com/content/free-items'
+      );
+      const data = await response.json();
+
+      if (!response.ok) {
+        const error = 'Something went wrong!';
+        throw new Error(
+          JSON.stringify({ message: error, status: response.status })
+        );
+      }
+
+      dispatch({ type: types.GET_MOVIES_SUCCESS, payload: data });
+    }
   } catch (error) {
     const { status } = JSON.parse(error.message);
     if (status === 401) {
